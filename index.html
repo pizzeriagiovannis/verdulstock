@@ -1,872 +1,743 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VerdulStock Elite</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
-
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>VerdulStock · Nemi</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
 <style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:'Inter',sans-serif;}
+body{background:#0f1115;color:#fff;min-height:100vh;}
+.hidden{display:none!important;}
 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
+/* LOGIN */
+.login{min-height:100vh;display:flex;justify-content:center;align-items:center;padding:20px;}
+.login-box{width:100%;max-width:400px;background:#151922;border:1px solid #242c38;border-radius:24px;padding:36px;}
+.logo-big{font-size:38px;font-weight:700;color:#9BE15D;text-align:center;margin-bottom:6px;}
+.sub{text-align:center;color:#98a2b3;margin-bottom:28px;font-size:14px;}
+.inp{width:100%;height:50px;background:#101318;border:1px solid #2b3444;border-radius:12px;padding:0 16px;color:#fff;font-size:15px;margin-bottom:12px;outline:none;transition:border .15s;}
+.inp:focus{border-color:#6dbd39;}
+.inp-sel{height:50px;cursor:pointer;}
+.btn-login{width:100%;height:52px;border:none;border-radius:14px;background:#6dbd39;color:#fff;font-size:16px;font-weight:700;cursor:pointer;transition:background .15s;}
+.btn-login:hover{background:#59a82e;}
+.err{color:#e05050;font-size:13px;text-align:center;margin-top:8px;min-height:18px;}
+.hint{color:#98a2b3;font-size:12px;text-align:center;margin-top:10px;}
+
+/* APP LAYOUT */
+.app{display:flex;min-height:100vh;}
+.sidebar{width:230px;background:#151922;border-right:1px solid #242c38;padding:20px;display:flex;flex-direction:column;gap:8px;position:sticky;top:0;height:100vh;overflow-y:auto;}
+.sidebar-logo{font-size:22px;font-weight:700;color:#9BE15D;margin-bottom:10px;padding-bottom:12px;border-bottom:1px solid #242c38;}
+.nav-btn{background:#1d2330;border:1px solid #2b3444;padding:13px 16px;border-radius:12px;color:#ccc;cursor:pointer;text-align:left;font-size:14px;font-weight:500;transition:all .15s;display:flex;align-items:center;gap:9px;}
+.nav-btn:hover{background:#232b3a;color:#fff;}
+.nav-btn.active{background:#1e4010;border-color:#6dbd39;color:#9BE15D;}
+.btn-logout{margin-top:auto;background:#2a1515;border:1px solid #5a2020;padding:13px 16px;border-radius:12px;color:#e07070;cursor:pointer;text-align:left;font-size:14px;font-weight:500;display:flex;align-items:center;gap:9px;}
+.btn-logout:hover{background:#3a1515;}
+
+/* MAIN */
+.main{flex:1;padding:24px;overflow-y:auto;min-width:0;}
+.page-header{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px;flex-wrap:wrap;gap:10px;}
+.page-title{font-size:26px;font-weight:700;color:#fff;}
+.page-sub{font-size:13px;color:#98a2b3;margin-top:3px;}
+.user-badge{background:#1d2330;border:1px solid #2b3444;padding:10px 16px;border-radius:12px;font-size:14px;color:#ccc;}
+
+/* PANEL */
+.panel{background:#151922;border:1px solid #242c38;border-radius:18px;padding:22px;margin-bottom:18px;}
+.panel h2{font-size:18px;font-weight:600;margin-bottom:18px;color:#fff;display:flex;align-items:center;gap:8px;}
+
+/* METRICS */
+.mgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:20px;}
+.mc{background:#1d2330;border:1px solid #2b3444;border-radius:14px;padding:16px;}
+.mc-l{font-size:12px;color:#98a2b3;margin-bottom:4px;}
+.mc-v{font-size:26px;font-weight:700;}
+.mc-s{font-size:12px;color:#98a2b3;margin-top:2px;}
+
+/* STORE TABS */
+.store-tabs{display:flex;gap:8px;margin-bottom:18px;flex-wrap:wrap;}
+.stab{padding:8px 18px;border-radius:99px;border:1px solid #2b3444;font-size:13px;font-weight:500;cursor:pointer;background:#1d2330;color:#98a2b3;transition:all .15s;}
+.stab.on{background:#1e4010;color:#9BE15D;border-color:#6dbd39;}
+
+/* PRODUCT CARD (empleado) */
+.prod-card{background:#1d2330;border:1px solid #2b3444;border-radius:14px;padding:16px 18px;margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+.prod-name{font-size:16px;font-weight:600;color:#fff;}
+.prod-meta{font-size:12px;color:#98a2b3;margin-top:3px;}
+.prod-controls{display:flex;align-items:center;gap:8px;}
+.ctrl-btn{width:38px;height:38px;border:none;border-radius:10px;background:#1e4010;color:#9BE15D;font-size:20px;cursor:pointer;font-weight:700;transition:background .15s;}
+.ctrl-btn:hover{background:#2f6418;}
+.qty-inp{width:65px;height:40px;background:#101318;border:1px solid #303848;border-radius:10px;color:#fff;text-align:center;font-size:16px;font-weight:600;outline:none;}
+.qty-inp:focus{border-color:#6dbd39;}
+
+/* SAVE BTN */
+.btn-save{width:100%;height:52px;border:none;border-radius:14px;background:#6dbd39;color:#fff;font-size:16px;font-weight:700;cursor:pointer;margin-top:10px;transition:background .15s;display:flex;align-items:center;justify-content:center;gap:8px;}
+.btn-save:hover{background:#59a82e;}
+.flash{display:inline-block;font-size:13px;color:#9BE15D;font-weight:500;opacity:0;transition:opacity .3s;margin-left:10px;}
+.flash.on{opacity:1;}
+
+/* ADMIN STOCK TABLE */
+.admin-tbl{width:100%;border-collapse:collapse;font-size:14px;}
+.admin-tbl th{text-align:left;padding:10px 12px;font-size:11px;font-weight:600;color:#98a2b3;border-bottom:1px solid #242c38;text-transform:uppercase;letter-spacing:.06em;background:#101318;}
+.admin-tbl td{padding:10px 12px;border-bottom:1px solid #1d2330;vertical-align:middle;}
+.admin-tbl tr:last-child td{border-bottom:none;}
+.admin-tbl tr:hover td{background:#1a2130;}
+.pill{display:inline-block;font-size:11px;font-weight:600;padding:3px 9px;border-radius:99px;}
+.pill-ok{background:#1a3a0a;color:#9BE15D;}
+.pill-low{background:#3a2a00;color:#f0b030;}
+.pill-crit{background:#3a0a0a;color:#e07070;}
+
+/* PEDIDO */
+.pedido-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid #242c38;font-size:14px;}
+.pedido-row:last-child{border-bottom:none;}
+.pedido-name{font-weight:600;}
+.pedido-detail{font-size:12px;color:#98a2b3;margin-top:2px;}
+.pedido-qty{font-weight:700;font-size:16px;color:#e07070;}
+.pedido-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:16px;}
+.btn-action{padding:11px 20px;border-radius:12px;border:none;font-size:14px;font-weight:600;cursor:pointer;display:flex;align-items:center;gap:7px;transition:background .15s;}
+.btn-green{background:#6dbd39;color:#fff;}
+.btn-green:hover{background:#59a82e;}
+.btn-blue{background:#1a3a6a;color:#70a8f0;border:1px solid #2a5aaa;}
+.btn-blue:hover{background:#1e4a8a;}
+.btn-ghost{background:#1d2330;border:1px solid #2b3444;color:#ccc;}
+.btn-ghost:hover{background:#242c38;}
+.btn-red{background:#3a0f0f;color:#e07070;border:1px solid #5a2020;}
+.btn-red:hover{background:#4a1515;}
+
+/* CONFIG */
+.cfg-row{display:grid;grid-template-columns:2fr 1fr 80px 80px 80px 40px;gap:8px;align-items:center;padding:8px 0;border-bottom:1px solid #1d2330;font-size:13px;}
+.cfg-row:last-child{border-bottom:none;}
+.cfg-inp{background:#101318;border:1px solid #2b3444;border-radius:8px;padding:7px 10px;color:#fff;font-size:13px;width:100%;outline:none;}
+.cfg-inp:focus{border-color:#6dbd39;}
+.cfg-sel{height:34px;cursor:pointer;}
+.btn-del{background:transparent;border:none;color:#e05050;cursor:pointer;font-size:18px;padding:4px;}
+.btn-del:hover{color:#ff7070;}
+.form-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:14px;}
+.emp-row{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;background:#1d2330;border:1px solid #2b3444;border-radius:10px;margin-bottom:8px;font-size:14px;flex-wrap:wrap;gap:8px;}
+
+/* SEARCH */
+.search-inp{width:100%;background:#101318;border:1px solid #2b3444;border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;margin-bottom:14px;outline:none;}
+.search-inp:focus{border-color:#6dbd39;}
+
+/* SECTION TITLE */
+.sec-t{font-size:11px;font-weight:600;color:#98a2b3;text-transform:uppercase;letter-spacing:.07em;margin-bottom:12px;margin-top:4px;}
+
+/* RESPONSIVE */
+@media(max-width:750px){
+  .app{flex-direction:column;}
+  .sidebar{width:100%;height:auto;position:relative;flex-direction:row;flex-wrap:wrap;padding:12px;gap:6px;}
+  .sidebar-logo{width:100%;margin-bottom:0;padding-bottom:8px;}
+  .nav-btn,.btn-logout{padding:10px 12px;font-size:13px;}
+  .main{padding:14px;}
+  .page-title{font-size:20px;}
+  .cfg-row{grid-template-columns:1fr 1fr;gap:6px;}
+  .mgrid{grid-template-columns:1fr 1fr;}
 }
-
-body{
-background:#0f1115;
-color:white;
-}
-
-.hidden{
-display:none!important;
-}
-
-.login{
-min-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:20px;
-}
-
-.login-box{
-width:100%;
-max-width:420px;
-background:#151922;
-border:1px solid #242c38;
-padding:34px;
-border-radius:24px;
-}
-
-.logo{
-font-size:34px;
-font-weight:700;
-color:#9BE15D;
-text-align:center;
-margin-bottom:10px;
-}
-
-.sub{
-text-align:center;
-color:#98a2b3;
-margin-bottom:24px;
-}
-
-.input{
-width:100%;
-height:52px;
-background:#101318;
-border:1px solid #2b3444;
-border-radius:14px;
-padding:0 16px;
-color:white;
-margin-bottom:14px;
-font-size:15px;
-}
-
-.btn{
-width:100%;
-height:54px;
-border:none;
-border-radius:16px;
-background:#6dbd39;
-color:white;
-font-size:16px;
-font-weight:700;
-cursor:pointer;
-}
-
-.app{
-display:flex;
-min-height:100vh;
-}
-
-.sidebar{
-width:250px;
-background:#151922;
-border-right:1px solid #242c38;
-padding:22px;
-display:flex;
-flex-direction:column;
-gap:12px;
-}
-
-.nav-btn{
-background:#1d2330;
-border:1px solid #2b3444;
-padding:14px;
-border-radius:14px;
-color:white;
-cursor:pointer;
-text-align:left;
-}
-
-.nav-btn.active{
-background:#2f6418;
-border-color:#6dbd39;
-}
-
-.logout{
-margin-top:auto;
-background:#5a1f1f;
-border:none;
-padding:14px;
-border-radius:14px;
-color:white;
-cursor:pointer;
-}
-
-.main{
-flex:1;
-padding:28px;
-}
-
-.top{
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:24px;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.title{
-font-size:30px;
-font-weight:700;
-}
-
-.user{
-background:#1d2330;
-padding:12px 16px;
-border-radius:14px;
-border:1px solid #2b3444;
-}
-
-.panel{
-background:#151922;
-border:1px solid #242c38;
-border-radius:20px;
-padding:24px;
-margin-bottom:20px;
-}
-
-.product{
-background:#1d2330;
-border:1px solid #2b3444;
-padding:18px;
-border-radius:16px;
-display:flex;
-justify-content:space-between;
-align-items:center;
-margin-bottom:14px;
-flex-wrap:wrap;
-gap:10px;
-}
-
-.product-name{
-font-size:18px;
-font-weight:600;
-}
-
-.product-info{
-font-size:13px;
-color:#98a2b3;
-margin-top:4px;
-}
-
-.controls{
-display:flex;
-align-items:center;
-gap:10px;
-flex-wrap:wrap;
-}
-
-.ctrl-btn{
-width:40px;
-height:40px;
-border:none;
-border-radius:12px;
-background:#2f6418;
-color:white;
-font-size:20px;
-cursor:pointer;
-}
-
-.qty{
-width:70px;
-height:42px;
-background:#101318;
-border:1px solid #303848;
-border-radius:12px;
-color:white;
-text-align:center;
-font-size:16px;
-}
-
-.save{
-margin-top:20px;
-width:100%;
-height:54px;
-border:none;
-border-radius:16px;
-background:#6dbd39;
-color:white;
-font-size:16px;
-font-weight:700;
-cursor:pointer;
-}
-
-.table{
-margin-top:20px;
-}
-
-.row{
-display:grid;
-grid-template-columns:2fr 1fr 1fr 1fr 1fr;
-gap:10px;
-padding:14px;
-background:#1d2330;
-border:1px solid #2b3444;
-border-radius:14px;
-margin-bottom:10px;
-align-items:center;
-}
-
-.small-btn{
-background:#2f6418;
-border:none;
-padding:10px 14px;
-border-radius:12px;
-color:white;
-cursor:pointer;
-margin-right:10px;
-margin-top:10px;
-}
-
-.delete-btn{
-background:#5a1f1f;
-border:none;
-padding:10px 14px;
-border-radius:12px;
-color:white;
-cursor:pointer;
-}
-
-.form-grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:14px;
-margin-top:20px;
-}
-
-.copy-box{
-background:#101318;
-border:1px solid #2b3444;
-padding:16px;
-border-radius:14px;
-margin-top:20px;
-white-space:pre-line;
-}
-
-@media(max-width:850px){
-
-.app{
-flex-direction:column;
-}
-
-.sidebar{
-width:100%;
-overflow:auto;
-}
-
-.main{
-padding:18px;
-}
-
-.row{
-grid-template-columns:1fr;
-}
-
-}
-
 </style>
 </head>
-
 <body>
 
+<!-- LOGIN -->
 <div id="loginPage" class="login">
-
-<div class="login-box">
-
-<div class="logo">🥬 VerdulStock</div>
-
-<div class="sub">
-Sistema inteligente para verdulerías
+  <div class="login-box">
+    <div class="logo-big">🥬 VerdulStock</div>
+    <div class="sub">Sistema de control de stock · Nemi</div>
+    <input id="lu" class="inp" placeholder="Usuario" autocomplete="username"/>
+    <input id="lp" class="inp" type="password" placeholder="Contraseña" autocomplete="current-password"/>
+    <div id="sf-wrap">
+      <select id="ls" class="inp inp-sel">
+        <option value="">— Elegí la sucursal —</option>
+        <option value="0">Nemi 1</option>
+        <option value="1">Nemi 2</option>
+        <option value="2">Nemi 3</option>
+      </select>
+    </div>
+    <button class="btn-login" style="margin-top:14px" onclick="doLogin()">Ingresar</button>
+    <div class="err" id="lerr"></div>
+    <p class="hint">Administrador: dejá la sucursal en blanco</p>
+  </div>
 </div>
 
-<input id="user" class="input" placeholder="Usuario">
-<input id="pass" class="input" type="password" placeholder="Contraseña">
-
-<button class="btn" onclick="login()">
-Ingresar
-</button>
-
-</div>
-
-</div>
-
-<div id="app" class="app hidden">
-
-<div class="sidebar">
-
-<div class="logo">🥬 VerdulStock</div>
-
-<button class="nav-btn active" onclick="showPage('stock', this)">
-📦 Stock
-</button>
-
-<button id="pedidosBtn" class="nav-btn" onclick="showPage('pedidos', this)">
-🛒 Pedidos
-</button>
-
-<button id="adminBtn" class="nav-btn" onclick="showPage('admin', this)">
-⚙️ Admin
-</button>
-
-<button class="logout" onclick="logout()">
-🚪 Salir
-</button>
-
-</div>
-
-<div class="main">
-
-<div class="top">
-
-<div>
-<div class="title" id="title">
-Nemi 1
-</div>
-
-<div style="color:#98a2b3;margin-top:4px" id="roleText">
-Empleado
-</div>
-</div>
-
-<div class="user" id="userBox">
-👤 Usuario
-</div>
-
-</div>
-
-<div id="stockPage" class="panel">
-
-<h2 style="margin-bottom:20px">
-📦 Cargar stock
-</h2>
-
-<div id="products"></div>
-
-<button class="save" onclick="saveAll()">
-💾 Guardar cambios
-</button>
-
-</div>
-
-<div id="pedidosPage" class="panel hidden">
-
-<h2 style="margin-bottom:20px">
-🛒 Pedido total al proveedor
-</h2>
-
-<div id="pedidoList"></div>
-
-<button class="small-btn" onclick="copyPedido()">
-📋 Copiar
-</button>
-
-<button class="small-btn" onclick="sendWhatsApp()">
-📲 WhatsApp
-</button>
-
-<button class="small-btn" onclick="downloadPedido()">
-📄 Descargar
-</button>
-
-<div id="pedidoText" class="copy-box hidden"></div>
-
-</div>
-
-<div id="adminPage" class="panel hidden">
-
-<h2>
-📊 Control total de sucursales
-</h2>
-
-<div id="stockGeneral" class="table"></div>
-
-<h2 style="margin-top:30px">
-👷 Empleados
-</h2>
-
-<div class="form-grid">
-
-<input id="empUser" class="input" placeholder="Usuario">
-<input id="empPass" class="input" placeholder="Contraseña">
-
-<select id="empBranch" class="input">
-<option value="0">Nemi 1</option>
-<option value="1">Nemi 2</option>
-<option value="2">Nemi 3</option>
-</select>
-
-</div>
-
-<button class="save" onclick="addEmployee()">
-➕ Agregar empleado
-</button>
-
-<div id="employeesList" class="table"></div>
-
-<h2 style="margin-top:30px">
-📦 Productos
-</h2>
-
-<div class="form-grid">
-
-<input id="prodName" class="input" placeholder="Producto">
-
-<select id="prodType" class="input">
-<option value="cajones">Cajones</option>
-<option value="bolsas">Bolsas</option>
-<option value="paquetes">Paquetes</option>
-<option value="unidades">Unidades</option>
-</select>
-
-<input id="ideal1" class="input" type="number" placeholder="Ideal N1">
-<input id="ideal2" class="input" type="number" placeholder="Ideal N2">
-<input id="ideal3" class="input" type="number" placeholder="Ideal N3">
-
-</div>
-
-<button class="save" onclick="addProduct()">
-➕ Agregar producto
-</button>
-
-</div>
-
-</div>
-
+<!-- APP -->
+<div id="appPage" class="app hidden">
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-logo">🥬 VerdulStock</div>
+    <button class="nav-btn active" id="nb-stock" onclick="goTab('stock')">📦 Stock</button>
+    <button class="nav-btn hidden" id="nb-pedido" onclick="goTab('pedido')">🛒 Pedido</button>
+    <button class="nav-btn hidden" id="nb-admin" onclick="goTab('admin')">📊 Sucursales</button>
+    <button class="nav-btn hidden" id="nb-config" onclick="goTab('config')">⚙️ Configurar</button>
+    <button class="btn-logout" onclick="doLogout()">🚪 Salir</button>
+  </div>
+  <div class="main">
+    <div class="page-header">
+      <div>
+        <div class="page-title" id="pg-title">Nemi 1</div>
+        <div class="page-sub" id="pg-sub">Empleado</div>
+      </div>
+      <div class="user-badge" id="pg-user">👤 usuario</div>
+    </div>
+    <div id="tab-body"></div>
+  </div>
 </div>
 
 <script>
+// ─── DATA ───────────────────────────────────────────────────────────────────
+const STORES = ['Nemi 1','Nemi 2','Nemi 3'];
 
-let users = JSON.parse(localStorage.getItem("users")) || [
-{user:"admin",pass:"1234",role:"admin"},
-{user:"nemi1",pass:"1234",role:"empleado",branch:0},
-{user:"nemi2",pass:"1234",role:"empleado",branch:1},
-{user:"nemi3",pass:"1234",role:"empleado",branch:2},
+const DEFAULT_PRODUCTS = [
+  {id:'acelga',     name:'Acelga',            unit:'paquete', ideal:[24,20,18]},
+  {id:'ajogrande',  name:'Ajo grande',         unit:'cajón',   ideal:[1,1,1]},
+  {id:'ajochico',   name:'Ajo chico',          unit:'cajón',   ideal:[1,1,1]},
+  {id:'ancobatata', name:'Anco batata',        unit:'bolsa',   ideal:[3,3,2]},
+  {id:'apio',       name:'Apio',              unit:'cajón',   ideal:[1,1,1]},
+  {id:'batata',     name:'Batata',            unit:'bolsa',   ideal:[2,2,2]},
+  {id:'batatazanahoria', name:'Batata zanahoria', unit:'cajón', ideal:[1,1,1]},
+  {id:'brocoli',    name:'Brócoli',           unit:'unidad',  ideal:[10,8,8]},
+  {id:'berenjena',  name:'Berenjena',         unit:'cajón',   ideal:[2,2,2]},
+  {id:'cebollam',   name:'Cebolla morada',    unit:'cajón',   ideal:[1,1,1]},
+  {id:'cebolla',    name:'Cebolla',           unit:'bolsa',   ideal:[15,12,10]},
+  {id:'chaucha',    name:'Chaucha',           unit:'cajón',   ideal:[1,1,1]},
+  {id:'choclo',     name:'Choclo',            unit:'cajón',   ideal:[1,1,1]},
+  {id:'espinaca',   name:'Espinaca',          unit:'jaula',   ideal:[1,1,1]},
+  {id:'francesa',   name:'Francesa',          unit:'jaula',   ideal:[1,1,1]},
+  {id:'repollada',  name:'Repollada',         unit:'jaula',   ideal:[1,1,1]},
+  {id:'lechuga',    name:'Lechuga',           unit:'jaula',   ideal:[1,1,1]},
+  {id:'manteca',    name:'Manteca lechuga',   unit:'jaula',   ideal:[1,1,1]},
+  {id:'morronv',    name:'Morrón verde',      unit:'cajón',   ideal:[3,3,2]},
+  {id:'morronr',    name:'Morrón rojo',       unit:'cajón',   ideal:[4,3,3]},
+  {id:'papanegra',  name:'Papa negra',        unit:'bolsa',   ideal:[40,35,30]},
+  {id:'pepino',     name:'Pepino',            unit:'cajón',   ideal:[1,1,1]},
+  {id:'perejil',    name:'Perejil',           unit:'paquete', ideal:[3,3,2]},
+  {id:'puerro',     name:'Puerro',            unit:'paquete', ideal:[3,3,2]},
+  {id:'rucula',     name:'Rúcula',            unit:'unidad',  ideal:[4,4,3]},
+  {id:'albahaca',   name:'Albahaca',          unit:'unidad',  ideal:[4,4,3]},
+  {id:'remolacha',  name:'Remolacha',         unit:'unidad',  ideal:[5,4,4]},
+  {id:'repollobl',  name:'Repollo blanco',    unit:'unidad',  ideal:[10,8,8]},
+  {id:'repollocol', name:'Repollo color',     unit:'unidad',  ideal:[10,8,8]},
+  {id:'cherry',     name:'Cherry',            unit:'cajón',   ideal:[1,1,1]},
+  {id:'perita',     name:'Tomate perita',     unit:'cajón',   ideal:[3,3,2]},
+  {id:'tomatered',  name:'Tomate redondo',    unit:'cajón',   ideal:[4,3,3]},
+  {id:'verdeo',     name:'Verdeo',            unit:'paquete', ideal:[3,3,2]},
+  {id:'zanahorian', name:'Zanahoria común',   unit:'bolsa',   ideal:[5,4,4]},
+  {id:'zanahoriac', name:'Zanahoria cubito',  unit:'bolsa',   ideal:[4,4,3]},
+  {id:'zapallito',  name:'Zapallito',         unit:'cajón',   ideal:[2,2,2]},
+  {id:'cabutia',    name:'Cabutia',           unit:'bolsa',   ideal:[2,2,2]},
+  {id:'zucchini',   name:'Zucchini',          unit:'cajón',   ideal:[1,1,1]},
+  {id:'palta',      name:'Palta',             unit:'unidad',  ideal:[12,10,10]},
+  {id:'banana',     name:'Banana',            unit:'cajón',   ideal:[4,3,3]},
+  {id:'ecuador',    name:'Ecuador',           unit:'cajón',   ideal:[1,1,1]},
+  {id:'kiwi',       name:'Kiwi',              unit:'cajón',   ideal:[1,1,1]},
+  {id:'limon',      name:'Limón',             unit:'cajón',   ideal:[4,3,3]},
+  {id:'mango',      name:'Mango',             unit:'unidad',  ideal:[8,6,6]},
+  {id:'manzana',    name:'Manzana',           unit:'cajón',   ideal:[3,3,2]},
+  {id:'deliciosa',  name:'Manzana deliciosa', unit:'caja',    ideal:[1,1,1]},
+  {id:'pina',       name:'Piña',              unit:'unidad',  ideal:[2,2,2]},
+  {id:'jugo',       name:'Naranja jugo',      unit:'cajón',   ideal:[4,3,3]},
+  {id:'ombligo',    name:'Naranja ombligo',   unit:'cajón',   ideal:[4,3,3]},
+  {id:'pera',       name:'Pera',              unit:'cajón',   ideal:[1,1,1]},
+  {id:'pomelo',     name:'Pomelo',            unit:'cajón',   ideal:[1,1,1]},
+  {id:'manzanav',   name:'Manzana verde',     unit:'cajón',   ideal:[1,1,1]},
+  {id:'mandarina',  name:'Mandarina criolla', unit:'cajón',   ideal:[5,4,4]},
+  {id:'ciruela',    name:'Ciruela',           unit:'cajón',   ideal:[1,1,1]},
+  {id:'uvanegra',   name:'Uva negra',         unit:'cajón',   ideal:[1,1,1]},
+  {id:'uvarosada',  name:'Uva rosada',        unit:'cajón',   ideal:[1,1,1]},
+  {id:'jengibre',   name:'Jengibre',          unit:'kilo',    ideal:[1,1,1]},
+  {id:'jugoblu',    name:'Jugo arándano',     unit:'unidad',  ideal:[10,8,8]},
+  {id:'mani',       name:'Maní grande',       unit:'unidad',  ideal:[10,8,8]},
+  {id:'puretomate', name:'Puré tomate grande',unit:'unidad',  ideal:[4,4,4]},
+  {id:'durazno',    name:'Durazno frasco',    unit:'unidad',  ideal:[4,4,4]},
+  {id:'miel',       name:'Miel',              unit:'unidad',  ideal:[3,3,3]},
+  {id:'aceite',     name:'Aceite grande',     unit:'unidad',  ideal:[2,2,2]},
+  {id:'vinagre',    name:'Vinagre',           unit:'unidad',  ideal:[2,2,2]},
+  {id:'huevojn1',   name:'Huevo N1',          unit:'cajón',   ideal:[5,4,4]},
+  {id:'huevon2',    name:'Huevo N2',          unit:'cajón',   ideal:[1,1,1]},
 ];
 
-let stockData = JSON.parse(localStorage.getItem("stockData")) || [
-[
-{name:"Tomates",ideal:10,current:3,unit:"cajones"},
-{name:"Papas",ideal:12,current:8,unit:"paquetes"},
-{name:"Bananas",ideal:7,current:2,unit:"cajones"},
-],
-[
-{name:"Tomates",ideal:8,current:5,unit:"cajones"},
-{name:"Papas",ideal:10,current:4,unit:"paquetes"},
-{name:"Bananas",ideal:5,current:1,unit:"cajones"},
-],
-[
-{name:"Tomates",ideal:7,current:2,unit:"cajones"},
-{name:"Papas",ideal:9,current:7,unit:"paquetes"},
-{name:"Bananas",ideal:4,current:1,unit:"cajones"},
-]
-];
+function ld(k,d){try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;}}
+function sv(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}
 
-const branches = ["Nemi 1","Nemi 2","Nemi 3"];
+let products = ld('nemi_prods', DEFAULT_PRODUCTS);
+let stock = ld('nemi_stock', [0,1,2].map(si=>Object.fromEntries(products.map(p=>[p.id,0]))));
+let users = ld('nemi_users', [
+  {user:'esteban',  pass:'esteban123', role:'admin'},
+  {user:'empleado1',pass:'nemi1',      role:'emp', store:0},
+  {user:'empleado2',pass:'nemi2',      role:'emp', store:1},
+  {user:'empleado3',pass:'nemi3',      role:'emp', store:2},
+]);
 
-let currentUser = null;
-let currentBranch = 0;
+let cur = null, curTab = 'stock', curAdminSI = 0;
 
-function saveAll(){
-
-localStorage.setItem("users", JSON.stringify(users));
-localStorage.setItem("stockData", JSON.stringify(stockData));
-
-alert("✅ Todo guardado");
-
+// ─── AUTH ────────────────────────────────────────────────────────────────────
+function doLogin(){
+  const u=document.getElementById('lu').value.trim().toLowerCase();
+  const p=document.getElementById('lp').value.trim();
+  const sf=document.getElementById('ls').value;
+  const err=document.getElementById('lerr');
+  const found=users.find(x=>x.user===u&&x.pass===p);
+  if(!found){err.textContent='Usuario o contraseña incorrectos';return;}
+  if(found.role==='emp'&&sf===''){err.textContent='Elegí la sucursal donde estás';return;}
+  if(found.role==='admin'&&sf!==''){err.textContent='El administrador no elige sucursal';return;}
+  err.textContent='';
+  cur={...found, store: found.role==='emp'?parseInt(sf):null};
+  document.getElementById('loginPage').classList.add('hidden');
+  document.getElementById('appPage').classList.remove('hidden');
+  document.getElementById('pg-user').textContent='👤 '+cur.user;
+  if(cur.role==='admin'){
+    document.getElementById('pg-title').textContent='Panel administrador';
+    document.getElementById('pg-sub').textContent='Vista completa · Nemi 1, 2 y 3';
+    ['nb-pedido','nb-admin','nb-config'].forEach(id=>document.getElementById(id).classList.remove('hidden'));
+    curTab='admin'; setNav('admin');
+  } else {
+    document.getElementById('pg-title').textContent=STORES[cur.store];
+    document.getElementById('pg-sub').textContent='Empleado · '+cur.user;
+    curTab='stock'; setNav('stock');
+  }
+  renderTab();
 }
 
-function login(){
-
-const user = document.getElementById("user").value;
-const pass = document.getElementById("pass").value;
-
-const found = users.find(u =>
-u.user === user &&
-u.pass === pass
-);
-
-if(!found){
-alert("Usuario incorrecto");
-return;
+function doLogout(){
+  cur=null;
+  ['lu','lp'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('ls').value='';
+  document.getElementById('lerr').textContent='';
+  ['nb-pedido','nb-admin','nb-config'].forEach(id=>document.getElementById(id).classList.add('hidden'));
+  document.getElementById('loginPage').classList.remove('hidden');
+  document.getElementById('appPage').classList.add('hidden');
 }
 
-currentUser = found;
-
-document.getElementById("loginPage").classList.add("hidden");
-document.getElementById("app").classList.remove("hidden");
-
-document.getElementById("userBox").innerText = "👤 " + found.user;
-
-if(found.role === "admin"){
-
-document.getElementById("roleText").innerText = "Administrador";
-
-}else{
-
-document.getElementById("roleText").innerText = "Empleado";
-
-document.getElementById("pedidosBtn").classList.add("hidden");
-document.getElementById("adminBtn").classList.add("hidden");
-
-currentBranch = found.branch;
-
-document.getElementById("title").innerText = branches[currentBranch];
-
+function goTab(t){curTab=t;setNav(t);renderTab();}
+function setNav(t){
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  const el=document.getElementById('nb-'+t);
+  if(el) el.classList.add('active');
+}
+function renderTab(){
+  if(curTab==='stock')  renderStock();
+  else if(curTab==='pedido') renderPedido();
+  else if(curTab==='admin')  renderAdmin();
+  else if(curTab==='config') renderConfig();
 }
 
-renderProducts();
-renderPedido();
-renderAdmin();
-
+// ─── EMPLEADO: STOCK ─────────────────────────────────────────────────────────
+function renderStock(){
+  const si = cur.role==='emp' ? cur.store : curAdminSI;
+  if(!stock[si]) stock[si]={};
+  let h='<input class="search-inp" placeholder="🔍 Buscar producto..." oninput="filterProds(this.value)" id="prod-search"/>';
+  h+='<div id="prod-list">';
+  h+=buildProdList(si, products, '');
+  h+='</div>';
+  h+=`<div style="display:flex;align-items:center;gap:12px;margin-top:8px">
+    <button class="btn-save" onclick="saveStock()">💾 Guardar stock</button>
+    <span class="flash" id="save-flash">¡Guardado!</span>
+  </div>`;
+  document.getElementById('tab-body').innerHTML=h;
 }
 
-function logout(){
-
-document.getElementById("loginPage").classList.remove("hidden");
-document.getElementById("app").classList.add("hidden");
-
-document.getElementById("pedidosBtn").classList.remove("hidden");
-document.getElementById("adminBtn").classList.remove("hidden");
-
+function buildProdList(si, prods, filter){
+  const f=filter.toLowerCase();
+  const filtered=prods.filter(p=>p.name.toLowerCase().includes(f));
+  if(filtered.length===0) return '<p style="color:#98a2b3;font-size:14px;padding:12px 0">Sin resultados.</p>';
+  return filtered.map(p=>{
+    const c=stock[si][p.id]??0;
+    const pct=p.ideal[si]>0?c/p.ideal[si]:1;
+    let color='#9BE15D'; if(pct<0.5) color='#e07070'; else if(pct<0.75) color='#f0b030';
+    return `<div class="prod-card">
+      <div>
+        <div class="prod-name">${p.name}</div>
+        <div class="prod-meta">Ideal: ${p.ideal[si]} ${p.unit}${p.ideal[si]>1?'s':''} · <span style="color:${color};font-weight:600">${c} actual</span></div>
+      </div>
+      <div class="prod-controls">
+        <button class="ctrl-btn" onclick="adjQty('${p.id}',-1)">−</button>
+        <input class="qty-inp" type="number" min="0" value="${c}" id="qi-${p.id}" onchange="setQty('${p.id}',this.value)"/>
+        <button class="ctrl-btn" onclick="adjQty('${p.id}',1)">+</button>
+      </div>
+    </div>`;
+  }).join('');
 }
 
-function renderProducts(){
-
-const container = document.getElementById("products");
-
-container.innerHTML = "";
-
-stockData[currentBranch].forEach((p,index)=>{
-
-container.innerHTML += `
-<div class="product">
-
-<div>
-<div class="product-name">${p.name}</div>
-<div class="product-info">
-Actual: ${p.current} ${p.unit}
-</div>
-</div>
-
-<div class="controls">
-
-<button class="ctrl-btn" onclick="changeQty(${index}, -1)">-</button>
-
-<input class="qty" value="${p.current}" readonly>
-
-<button class="ctrl-btn" onclick="changeQty(${index}, 1)">+</button>
-
-</div>
-
-</div>
-`;
-
-});
-
+function filterProds(val){
+  const si=cur.role==='emp'?cur.store:curAdminSI;
+  document.getElementById('prod-list').innerHTML=buildProdList(si,products,val);
 }
 
-function changeQty(index, amount){
-
-stockData[currentBranch][index].current += amount;
-
-if(stockData[currentBranch][index].current < 0){
-stockData[currentBranch][index].current = 0;
+function adjQty(pid, delta){
+  const si=cur.role==='emp'?cur.store:curAdminSI;
+  if(!stock[si]) stock[si]={};
+  stock[si][pid]= Math.max(0,(stock[si][pid]??0)+delta);
+  const inp=document.getElementById('qi-'+pid);
+  if(inp) inp.value=stock[si][pid];
 }
 
-renderProducts();
-renderPedido();
-renderAdmin();
-
+function setQty(pid, val){
+  const si=cur.role==='emp'?cur.store:curAdminSI;
+  if(!stock[si]) stock[si]={};
+  stock[si][pid]=Math.max(0,parseInt(val)||0);
 }
 
-function renderPedido(){
-
-const pedidoList = document.getElementById("pedidoList");
-
-pedidoList.innerHTML = "";
-
-stockData[0].forEach((p,index)=>{
-
-const faltante1 = stockData[0][index].ideal - stockData[0][index].current;
-const faltante2 = stockData[1][index].ideal - stockData[1][index].current;
-const faltante3 = stockData[2][index].ideal - stockData[2][index].current;
-
-const total = Math.max(0,faltante1) + Math.max(0,faltante2) + Math.max(0,faltante3);
-
-pedidoList.innerHTML += `
-<div class="product">
-
-<div>
-<div class="product-name">
-${p.name}
-</div>
-
-<div class="product-info">
-N1: ${faltante1 > 0 ? faltante1 : 0} |
-N2: ${faltante2 > 0 ? faltante2 : 0} |
-N3: ${faltante3 > 0 ? faltante3 : 0}
-</div>
-</div>
-
-<div class="controls">
-
-<input class="qty" id="pedido-${index}" value="${total}">
-
-<div style="color:#98a2b3">
-${p.unit}
-</div>
-
-</div>
-
-</div>
-`;
-
-});
-
+function saveStock(){
+  const si=cur.role==='emp'?cur.store:curAdminSI;
+  if(!stock[si]) stock[si]={};
+  products.forEach(p=>{
+    const inp=document.getElementById('qi-'+p.id);
+    if(inp) stock[si][p.id]=Math.max(0,parseInt(inp.value)||0);
+  });
+  sv('nemi_stock',stock);
+  const fl=document.getElementById('save-flash');
+  if(fl){fl.classList.add('on');setTimeout(()=>fl.classList.remove('on'),2500);}
 }
 
+// ─── ADMIN: SUCURSALES ────────────────────────────────────────────────────────
 function renderAdmin(){
+  let crit=0,low=0,ok=0;
+  [0,1,2].forEach(si=>products.forEach(p=>{
+    const pct=((stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0))/p.ideal[si];
+    if(pct<0.5)crit++;else if(pct<0.75)low++;else ok++;
+  }));
+  let h=`<div class="mgrid">
+    <div class="mc"><div class="mc-l">Stock crítico</div><div class="mc-v" style="color:#e07070">${crit}</div><div class="mc-s">bajo 50%</div></div>
+    <div class="mc"><div class="mc-l">Stock bajo</div><div class="mc-v" style="color:#f0b030">${low}</div><div class="mc-s">50–75%</div></div>
+    <div class="mc"><div class="mc-l">Completo</div><div class="mc-v" style="color:#9BE15D">${ok}</div><div class="mc-s">75% o más</div></div>
+    <div class="mc"><div class="mc-l">Productos</div><div class="mc-v">${products.length}</div><div class="mc-s">en lista</div></div>
+  </div>`;
 
-const stockGeneral = document.getElementById("stockGeneral");
+  h+='<p class="sec-t">Elegí la sucursal para ver el detalle</p>';
+  h+='<div class="store-tabs">'+STORES.map((s,i)=>`<button class="stab ${i===curAdminSI?'on':''}" onclick="setAdminSI(${i})">${s}</button>`).join('')+'</div>';
 
-stockGeneral.innerHTML = "";
+  const si=curAdminSI;
+  if(!stock[si]) stock[si]={};
+  h+='<p class="sec-t" style="margin-bottom:6px">Stock actual — '+STORES[si]+'</p>';
+  h+='<p style="font-size:12px;color:#98a2b3;margin-bottom:12px">Podés editar el stock ideal directamente acá y guardar.</p>';
+  h+='<div style="overflow-x:auto"><table class="admin-tbl"><thead><tr><th>Producto</th><th>Actual</th><th>Ideal <span style="color:#6dbd39;font-size:10px">(editable)</span></th><th>Unidad</th><th>Falta</th><th>Estado</th></tr></thead><tbody>';
+  products.forEach((p,i)=>{
+    const c=stock[si][p.id]??0, diff=p.ideal[si]-c, pct=c/p.ideal[si];
+    let pcls='pill-ok',pst='OK';if(pct<0.5){pcls='pill-crit';pst='Crítico';}else if(pct<0.75){pcls='pill-low';pst='Bajo';}
+    h+=`<tr>
+      <td><strong>${p.name}</strong></td>
+      <td>${c}</td>
+      <td><input type="number" min="0" value="${p.ideal[si]}" id="ideal-${i}" 
+        style="width:60px;background:#101318;border:1px solid #2b3444;border-radius:8px;color:#9BE15D;text-align:center;padding:5px;font-size:14px;font-weight:600;outline:none;"
+        onfocus="this.style.borderColor='#6dbd39'" onblur="this.style.borderColor='#2b3444'"/></td>
+      <td style="color:#98a2b3;font-size:12px">${p.unit}</td>
+      <td style="font-weight:700;color:${diff>0?'#e07070':'#9BE15D'}" id="diff-${i}">${diff>0?'+'+diff:'—'}</td>
+      <td><span class="pill ${pcls}">${pst}</span></td>
+    </tr>`;
+  });
+  h+='</tbody></table></div>';
+  h+=`<div style="display:flex;align-items:center;gap:12px;margin-top:12px">
+    <button class="btn-action btn-green" onclick="saveIdeals(${si})">💾 Guardar ideales</button>
+    <span id="ideal-flash" style="font-size:13px;color:#9BE15D;font-weight:500;opacity:0;transition:opacity .3s">¡Ideales guardados!</span>
+  </div>`;
 
-stockData[0].forEach((p,index)=>{
-
-stockGeneral.innerHTML += `
-<div class="row">
-
-<div>${p.name}</div>
-
-<div>
-N1: ${stockData[0][index].current}/${stockData[0][index].ideal}
-</div>
-
-<div>
-N2: ${stockData[1][index].current}/${stockData[1][index].ideal}
-</div>
-
-<div>
-N3: ${stockData[2][index].current}/${stockData[2][index].ideal}
-</div>
-
-<div>
-${p.unit}
-</div>
-
-</div>
-`;
-
-});
-
-const employeesList = document.getElementById("employeesList");
-
-employeesList.innerHTML = "";
-
-users.filter(u => u.role === "empleado").forEach((u,index)=>{
-
-employeesList.innerHTML += `
-<div class="row">
-
-<div>${u.user}</div>
-
-<div>${u.pass}</div>
-
-<div>${branches[u.branch]}</div>
-
-<div></div>
-
-<div>
-<button class="delete-btn" onclick="deleteEmployee(${index})">
-Eliminar
-</button>
-</div>
-
-</div>
-`;
-
-});
-
+  const pedido=products.filter(p=>(stock[si][p.id]??0)<p.ideal[si]);
+  h+='<p class="sec-t" style="margin-top:20px">Pedido sugerido — '+STORES[si]+'</p>';
+  if(pedido.length===0){
+    h+='<p style="color:#9BE15D;font-size:14px;padding:8px 0">✓ Stock completo, no hay que pedir nada.</p>';
+  } else {
+    h+='<div class="panel" style="padding:16px">';
+    pedido.forEach(p=>{
+      const c=stock[si][p.id]??0,d=p.ideal[si]-c;
+      h+=`<div class="pedido-row"><div><div class="pedido-name">${p.name}</div><div class="pedido-detail">Actual: ${c} · Ideal: ${p.ideal[si]} ${p.unit}${p.ideal[si]>1?'s':''}</div></div><div class="pedido-qty">+${d} ${p.unit}${d>1?'s':''}</div></div>`;
+    });
+    h+='</div>';
+  }
+  h+=`<div class="pedido-actions">
+    <button class="btn-action btn-green" onclick="pdfPedido(${si})">📄 Bajar PDF</button>
+    <button class="btn-action btn-blue" onclick="waPedido(${si})">📲 Enviar WhatsApp</button>
+  </div>`;
+  document.getElementById('tab-body').innerHTML=h;
 }
 
-function addEmployee(){
-
-const user = document.getElementById("empUser").value;
-const pass = document.getElementById("empPass").value;
-const branch = parseInt(document.getElementById("empBranch").value);
-
-if(!user || !pass){
-alert("Completa datos");
-return;
+function saveIdeals(si){
+  products.forEach((p,i)=>{
+    const el=document.getElementById('ideal-'+i);
+    if(el) p.ideal[si]=Math.max(0,parseInt(el.value)||0);
+  });
+  sv('nemi_prods',products);
+  // refresca las diferencias sin rerenderizar toda la tabla
+  products.forEach((p,i)=>{
+    const c=stock[si][p.id]??0, diff=p.ideal[si]-c;
+    const td=document.getElementById('diff-'+i);
+    if(td){td.textContent=diff>0?'+'+diff:'—';td.style.color=diff>0?'#e07070':'#9BE15D';}
+  });
+  const fl=document.getElementById('ideal-flash');
+  if(fl){fl.style.opacity=1;setTimeout(()=>fl.style.opacity=0,2500);}
 }
 
-users.push({
-user,
-pass,
-role:"empleado",
-branch
-});
+function setAdminSI(i){curAdminSI=i;renderAdmin();}
 
-saveAll();
-renderAdmin();
+// ─── PEDIDO ────────────────────────────────────────────────────────────────
+function renderPedido(){
+  let h='';
 
+  h+='<p class="sec-t">Pedido por sucursal</p>';
+  [0,1,2].forEach(si=>{
+    const pedido=products.filter(p=>(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0)<p.ideal[si]);
+    h+=`<div class="panel" style="margin-bottom:14px">`;
+    h+=`<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;flex-wrap:wrap;gap:8px">`;
+    h+=`<span style="font-size:16px;font-weight:700;color:#9BE15D">\u{1F96C} ${STORES[si]}</span>`;
+    h+=`<span style="font-size:12px;color:#98a2b3">${pedido.length} producto${pedido.length!==1?'s':''} para pedir</span>`;
+    h+=`</div>`;
+    if(pedido.length===0){
+      h+=`<p style="color:#9BE15D;font-size:14px;padding:4px 0">\u2713 Stock completo</p>`;
+    } else {
+      pedido.forEach(p=>{
+        const c=stock[si][p.id]??0, d=p.ideal[si]-c;
+        h+=`<div class="pedido-row">
+          <div><div class="pedido-name">${p.name}</div>
+          <div class="pedido-detail">Actual: ${c} \u00b7 Ideal: ${p.ideal[si]} ${p.unit}${p.ideal[si]>1?'s':''}</div></div>
+          <div class="pedido-qty">+${d} ${p.unit}${d>1?'s':''}</div>
+        </div>`;
+      });
+    }
+    h+=`<div class="pedido-actions" style="margin-top:12px">
+      <button class="btn-action btn-green" onclick="pdfPedido(${si})">\u{1F4C4} PDF</button>
+      <button class="btn-action btn-blue" onclick="waPedido(${si})">\u{1F4F2} WhatsApp</button>
+      <button class="btn-action btn-ghost" onclick="copyPedidoSI(${si})">\u{1F4CB} Copiar texto</button>
+    </div>
+    <div id="copy-ok-${si}" style="font-size:12px;color:#9BE15D;margin-top:6px;opacity:0;transition:opacity .3s">\u00a1Copiado!</div>
+    </div>`;
+  });
+
+  h+='<p class="sec-t" style="margin-top:8px">Pedido total \u2014 3 sucursales acumuladas</p>';
+  const rows=[];
+  products.forEach(p=>{
+    let total=0;
+    [0,1,2].forEach(si=>{total+=Math.max(0,p.ideal[si]-(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0));});
+    if(total>0) rows.push({p,total});
+  });
+  if(rows.length===0){
+    h+='<p style="color:#9BE15D;font-size:14px;padding:8px 0">\u2713 Las 3 sucursales tienen stock completo.</p>';
+  } else {
+    h+='<div class="panel" style="padding:16px">';
+    rows.forEach(({p,total})=>{
+      const n1=Math.max(0,p.ideal[0]-(stock[0]&&stock[0][p.id]!=null?stock[0][p.id]:0));
+      const n2=Math.max(0,p.ideal[1]-(stock[1]&&stock[1][p.id]!=null?stock[1][p.id]:0));
+      const n3=Math.max(0,p.ideal[2]-(stock[2]&&stock[2][p.id]!=null?stock[2][p.id]:0));
+      h+=`<div class="pedido-row">
+        <div><div class="pedido-name">${p.name}</div>
+        <div class="pedido-detail">N1: +${n1} \u00b7 N2: +${n2} \u00b7 N3: +${n3}</div></div>
+        <div class="pedido-qty">${total} ${p.unit}${total>1?'s':''}</div>
+      </div>`;
+    });
+    h+='</div>';
+  }
+  h+=`<div class="pedido-actions">
+    <button class="btn-action btn-green" onclick="pdfPedidoTotal()">\u{1F4C4} PDF total</button>
+    <button class="btn-action btn-blue" onclick="waPedidoTotal()">\u{1F4F2} WhatsApp</button>
+    <button class="btn-action btn-ghost" onclick="copyPedidoTotal()">\u{1F4CB} Copiar texto</button>
+  </div>
+  <div id="copy-ok-total" style="font-size:12px;color:#9BE15D;margin-top:6px;opacity:0;transition:opacity .3s">\u00a1Copiado!</div>`;
+
+  document.getElementById('tab-body').innerHTML=h;
 }
 
-function deleteEmployee(index){
+function copyPedidoSI(si){
+  const txt=genPedidoText(si);
+  if(!txt){alert('No hay productos para pedir en '+STORES[si]);return;}
+  navigator.clipboard.writeText(txt).then(()=>{
+    const el=document.getElementById('copy-ok-'+si);
+    if(el){el.style.opacity=1;setTimeout(()=>el.style.opacity=0,2500);}
+  });
+}
 
-const employees = users.filter(u => u.role === "empleado");
+function copyPedidoTotal(){
+  const txt=genPedidoTotalText();
+  navigator.clipboard.writeText(txt).then(()=>{
+    const el=document.getElementById('copy-ok-total');
+    if(el){el.style.opacity=1;setTimeout(()=>el.style.opacity=0,2500);}
+  });
+}
 
-const emp = employees[index];
+// ─── CONFIG ──────────────────────────────────────────────────────────────────
+function renderConfig(){
+  let h='<p class="sec-t">Productos y stock ideal</p>';
+  h+='<input class="search-inp" placeholder="🔍 Buscar..." oninput="filterCfg(this.value)" id="cfg-search"/>';
+  h+='<div id="cfg-list" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:13px"><thead>';
+  h+='<tr style="border-bottom:1px solid #2b3444"><th style="text-align:left;padding:8px;color:#98a2b3">Nombre</th><th style="color:#98a2b3;padding:8px">Unidad</th><th style="color:#98a2b3;padding:8px">N1</th><th style="color:#98a2b3;padding:8px">N2</th><th style="color:#98a2b3;padding:8px">N3</th><th></th></tr></thead><tbody id="cfg-tbody">';
+  h+=buildCfgRows(products);
+  h+='</tbody></table></div>';
+  h+=`<button class="btn-action btn-green" style="margin:14px 0" onclick="saveConfig()">💾 Guardar cambios</button>`;
+  h+='<p class="sec-t" style="margin-top:8px">Agregar producto nuevo</p>';
+  h+='<div class="panel"><div class="form-grid">';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Nombre</div><input type="text" id="np-name" class="cfg-inp" placeholder="Ej: Choclo"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Unidad</div><select id="np-unit" class="cfg-inp cfg-sel"><option>cajón</option><option>paquete</option><option>bolsa</option><option>unidad</option><option>jaula</option><option>caja</option><option>kilo</option></select></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 1</div><input type="number" min="1" value="5" id="np-i0" class="cfg-inp"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 2</div><input type="number" min="1" value="5" id="np-i1" class="cfg-inp"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 3</div><input type="number" min="1" value="5" id="np-i2" class="cfg-inp"/></div>';
+  h+='</div>';
+  h+=`<button class="btn-action btn-green btn-sm" onclick="addProduct()">➕ Agregar</button></div>`;
 
-users = users.filter(u => u !== emp);
+  h+='<p class="sec-t" style="margin-top:16px">Empleados</p>';
+  h+='<div class="panel">';
+  users.filter(u=>u.role==='emp').forEach((u,i)=>{
+    h+=`<div class="emp-row"><div><strong>${u.user}</strong> <span style="color:#98a2b3;font-size:12px">· ${STORES[u.store]} · pass: ${u.pass}</span></div>
+      <button class="btn-action btn-red btn-sm" onclick="delEmployee('${u.user}')">🗑 Eliminar</button></div>`;
+  });
+  h+='<div class="form-grid" style="margin-top:14px">';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Usuario</div><input type="text" id="eu" class="cfg-inp" placeholder="nombre"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Contraseña</div><input type="text" id="ep" class="cfg-inp" placeholder="contraseña"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Sucursal</div><select id="es" class="cfg-inp cfg-sel">'+STORES.map((s,i)=>`<option value="${i}">${s}</option>`).join('')+'</select></div>';
+  h+='</div>';
+  h+=`<button class="btn-action btn-green btn-sm" style="margin-top:10px" onclick="addEmployee()">➕ Agregar empleado</button></div>`;
+  document.getElementById('tab-body').innerHTML=h;
+}
 
-saveAll();
-renderAdmin();
+function buildCfgRows(prods){
+  return prods.map((p,i)=>{
+    const idx=products.indexOf(p);
+    return `<tr style="border-bottom:1px solid #1d2330">
+      <td style="padding:6px 8px"><input type="text" value="${p.name}" id="cn-${idx}" class="cfg-inp" style="width:130px"/></td>
+      <td style="padding:6px 8px"><select id="cu-${idx}" class="cfg-inp cfg-sel" style="width:90px">
+        ${['cajón','paquete','bolsa','unidad','jaula','caja','kilo'].map(u=>`<option ${p.unit===u?'selected':''}>${u}</option>`).join('')}
+      </select></td>
+      <td style="padding:6px 8px"><input type="number" min="1" value="${p.ideal[0]}" id="ci0-${idx}" class="cfg-inp" style="width:55px"/></td>
+      <td style="padding:6px 8px"><input type="number" min="1" value="${p.ideal[1]}" id="ci1-${idx}" class="cfg-inp" style="width:55px"/></td>
+      <td style="padding:6px 8px"><input type="number" min="1" value="${p.ideal[2]}" id="ci2-${idx}" class="cfg-inp" style="width:55px"/></td>
+      <td style="padding:6px 8px"><button class="btn-del" onclick="delProduct(${idx})" aria-label="Eliminar ${p.name}">🗑</button></td>
+    </tr>`;
+  }).join('');
+}
 
+function filterCfg(val){
+  const f=val.toLowerCase();
+  const filtered=products.filter(p=>p.name.toLowerCase().includes(f));
+  document.getElementById('cfg-tbody').innerHTML=buildCfgRows(filtered);
+}
+
+function saveConfig(){
+  products.forEach((p,i)=>{
+    const n=document.getElementById('cn-'+i);
+    const u=document.getElementById('cu-'+i);
+    if(n&&n.value.trim()) p.name=n.value.trim();
+    if(u) p.unit=u.value;
+    [0,1,2].forEach(s=>{const el=document.getElementById('ci'+s+'-'+i);if(el)p.ideal[s]=Math.max(1,parseInt(el.value)||1);});
+  });
+  sv('nemi_prods',products);
+  alert('✅ Cambios guardados');
+  renderConfig();
+}
+
+function delProduct(i){
+  if(!confirm('¿Eliminar "'+products[i].name+'"?')) return;
+  products.splice(i,1);
+  sv('nemi_prods',products);
+  renderConfig();
 }
 
 function addProduct(){
-
-const name = document.getElementById("prodName").value;
-const type = document.getElementById("prodType").value;
-
-const i1 = parseInt(document.getElementById("ideal1").value);
-const i2 = parseInt(document.getElementById("ideal2").value);
-const i3 = parseInt(document.getElementById("ideal3").value);
-
-if(!name || !i1 || !i2 || !i3){
-alert("Completa todo");
-return;
+  const name=document.getElementById('np-name').value.trim();
+  const unit=document.getElementById('np-unit').value;
+  const i0=Math.max(1,parseInt(document.getElementById('np-i0').value)||1);
+  const i1=Math.max(1,parseInt(document.getElementById('np-i1').value)||1);
+  const i2=Math.max(1,parseInt(document.getElementById('np-i2').value)||1);
+  if(!name){alert('Ingresá el nombre del producto');return;}
+  const id='p'+Date.now();
+  products.push({id,name,unit,ideal:[i0,i1,i2]});
+  stock.forEach(s=>{s[id]=0;});
+  sv('nemi_prods',products); sv('nemi_stock',stock);
+  renderConfig();
 }
 
-stockData[0].push({name,ideal:i1,current:0,unit:type});
-stockData[1].push({name,ideal:i2,current:0,unit:type});
-stockData[2].push({name,ideal:i3,current:0,unit:type});
-
-saveAll();
-
-renderProducts();
-renderPedido();
-renderAdmin();
-
+function addEmployee(){
+  const u=document.getElementById('eu').value.trim();
+  const p=document.getElementById('ep').value.trim();
+  const s=parseInt(document.getElementById('es').value);
+  if(!u||!p){alert('Completá usuario y contraseña');return;}
+  if(users.find(x=>x.user===u)){alert('Ya existe ese usuario');return;}
+  users.push({user:u,pass:p,role:'emp',store:s});
+  sv('nemi_users',users);
+  renderConfig();
 }
 
-function generatePedido(){
-
-let text = "🛒 PEDIDO GENERAL\n\n";
-
-stockData[0].forEach((p,index)=>{
-
-const total = parseInt(document.getElementById("pedido-" + index).value);
-
-if(total > 0){
-
-text += `${p.name}: ${total} ${p.unit}\n`;
-
+function delEmployee(uname){
+  if(!confirm('¿Eliminar empleado "'+uname+'"?')) return;
+  users=users.filter(u=>u.user!==uname);
+  sv('nemi_users',users);
+  renderConfig();
 }
 
-});
-
-return text;
-
+// ─── PDF ─────────────────────────────────────────────────────────────────────
+function makePDF(title, subtitle, rows){
+  const {jsPDF}=window.jspdf;
+  const doc=new jsPDF();
+  const today=new Date().toLocaleDateString('es-AR');
+  doc.setFontSize(18); doc.setTextColor(39,80,10);
+  doc.text('Nemi — '+title,14,20);
+  doc.setFontSize(11); doc.setTextColor(80,80,80);
+  doc.text(subtitle,14,30);
+  doc.text('Fecha: '+today,14,38);
+  doc.setFontSize(9); doc.setTextColor(120,120,120);
+  doc.text('VerdulStock · Administrador: Esteban',14,46);
+  let y=58;
+  doc.setFontSize(10); doc.setFillColor(220,240,200); doc.rect(14,y-5,182,10,'F');
+  doc.setTextColor(39,80,10);
+  doc.text('Producto',16,y); doc.text('Cantidad',130,y); doc.text('Unidad',160,y);
+  y+=8;
+  rows.forEach((r,idx)=>{
+    if(y>270){doc.addPage();y=20;}
+    if(idx%2===0){doc.setFillColor(248,248,245);doc.rect(14,y-5,182,9,'F');}
+    doc.setTextColor(40,40,40); doc.text(r.name,16,y);
+    doc.setTextColor(163,45,45); doc.text('+'+r.qty,130,y);
+    doc.setTextColor(80,80,80); doc.text(r.unit,160,y);
+    y+=9;
+  });
+  doc.setFontSize(8); doc.setTextColor(160,160,160);
+  doc.text('VerdulStock · Nemi · '+today,14,285);
+  return doc;
 }
 
-function copyPedido(){
-
-const text = generatePedido();
-
-navigator.clipboard.writeText(text);
-
-const box = document.getElementById("pedidoText");
-
-box.classList.remove("hidden");
-
-box.innerText = text;
-
-alert("✅ Pedido copiado");
-
+function pdfPedido(si){
+  const pedido=products.filter(p=>(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0)<p.ideal[si]);
+  if(pedido.length===0){alert('No hay productos para pedir en '+STORES[si]);return;}
+  const rows=pedido.map(p=>({name:p.name,qty:p.ideal[si]-(stock[si][p.id]??0),unit:p.unit}));
+  const doc=makePDF('Pedido sugerido','Sucursal: '+STORES[si],rows);
+  const today=new Date().toLocaleDateString('es-AR').replace(/\//g,'-');
+  doc.save('pedido-'+STORES[si].replace(' ','-').toLowerCase()+'-'+today+'.pdf');
 }
 
-function sendWhatsApp(){
-
-const text = encodeURIComponent(generatePedido());
-
-window.open(`https://wa.me/?text=${text}`);
-
+function pdfPedidoTotal(){
+  const rows=[];
+  products.forEach(p=>{
+    let total=0;
+    [0,1,2].forEach(si=>{total+=Math.max(0,p.ideal[si]-(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0));});
+    if(total>0) rows.push({name:p.name,qty:total,unit:p.unit});
+  });
+  if(rows.length===0){alert('Stock completo en todas las sucursales');return;}
+  const doc=makePDF('Pedido total','Todas las sucursales acumuladas',rows);
+  const today=new Date().toLocaleDateString('es-AR').replace(/\//g,'-');
+  doc.save('pedido-total-'+today+'.pdf');
 }
 
-function downloadPedido(){
-
-const blob = new Blob([generatePedido()], {type:"text/plain"});
-
-const a = document.createElement("a");
-
-a.href = URL.createObjectURL(blob);
-
-a.download = "pedido.txt";
-
-a.click();
-
+function genPedidoText(si){
+  const pedido=products.filter(p=>(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0)<p.ideal[si]);
+  if(pedido.length===0) return null;
+  let txt='🥬 *Pedido Nemi — '+STORES[si]+'*\n';
+  txt+='📅 '+new Date().toLocaleDateString('es-AR')+'\n\n';
+  pedido.forEach(p=>{const d=p.ideal[si]-(stock[si][p.id]??0);txt+=`• ${p.name}: ${d} ${p.unit}${d>1?'s':''}\n`;});
+  return txt;
 }
 
-function showPage(page, btn){
-
-document.querySelectorAll(".nav-btn").forEach(b=>{
-b.classList.remove("active");
-});
-
-btn.classList.add("active");
-
-document.getElementById("stockPage").classList.add("hidden");
-document.getElementById("pedidosPage").classList.add("hidden");
-document.getElementById("adminPage").classList.add("hidden");
-
-if(page === "stock"){
-document.getElementById("stockPage").classList.remove("hidden");
+function genPedidoTotalText(){
+  let txt='🥬 *Pedido total Nemi — 3 sucursales*\n';
+  txt+='📅 '+new Date().toLocaleDateString('es-AR')+'\n\n';
+  products.forEach(p=>{
+    let total=0;
+    [0,1,2].forEach(si=>{total+=Math.max(0,p.ideal[si]-(stock[si]&&stock[si][p.id]!=null?stock[si][p.id]:0));});
+    if(total>0) txt+=`• ${p.name}: ${total} ${p.unit}${total>1?'s':''}\n`;
+  });
+  return txt;
 }
 
-if(page === "pedidos"){
-document.getElementById("pedidosPage").classList.remove("hidden");
+function waPedido(si){
+  const txt=genPedidoText(si);
+  if(!txt){alert('No hay productos para pedir en '+STORES[si]);return;}
+  window.open('https://wa.me/?text='+encodeURIComponent(txt),'_blank');
 }
 
-if(page === "admin"){
-document.getElementById("adminPage").classList.remove("hidden");
+function waPedidoTotal(){
+  window.open('https://wa.me/?text='+encodeURIComponent(genPedidoTotalText()),'_blank');
 }
 
-}
-
+// Enter en login
+document.getElementById('lu').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
+document.getElementById('lp').addEventListener('keydown',e=>{if(e.key==='Enter')doLogin();});
 </script>
-
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </body>
 </html>
-
