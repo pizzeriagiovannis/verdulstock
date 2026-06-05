@@ -145,7 +145,7 @@ body{background:#0f1115;color:#fff;min-height:100vh;}
         <option value="">— Elegí la sucursal —</option>
         <option value="0">Nemi 1</option>
         <option value="1">Nemi 2</option>
-        <option value="2">Nemi 3</option>
+        <option value="2">Alma</option>
       </select>
     </div>
     <button class="btn-login" style="margin-top:14px" onclick="doLogin()">Ingresar</button>
@@ -178,7 +178,7 @@ body{background:#0f1115;color:#fff;min-height:100vh;}
 
 <script>
 // ─── DATA ───────────────────────────────────────────────────────────────────
-const STORES = ['Nemi 1','Nemi 2','Nemi 3'];
+const STORES = ['Nemi 1','Nemi 2','Alma'];
 
 const DEFAULT_PRODUCTS = [
   {id:'acelga',     name:'Acelga',            unit:'paquete', ideal:[24,20,18]},
@@ -258,7 +258,7 @@ let users = ld('nemi_users', [
   {user:'esteban',  pass:'esteban123', role:'admin'},
   {user:'empleado1',pass:'nemi1',      role:'emp', store:0},
   {user:'empleado2',pass:'nemi2',      role:'emp', store:1},
-  {user:'empleado3',pass:'alma',      role:'emp', store:2},
+  {user:'empleado3',pass:'nemi3',role:'emp', store:2},
 ]);
 
 let cur = null, curTab = 'stock', curAdminSI = 0;
@@ -280,7 +280,7 @@ function doLogin(){
   document.getElementById('pg-user').textContent='👤 '+cur.user;
   if(cur.role==='admin'){
     document.getElementById('pg-title').textContent='Panel administrador';
-    document.getElementById('pg-sub').textContent='Vista completa · Nemi 1, 2 y 3';
+    document.getElementById('pg-sub').textContent='Vista completa · Nemi 1, Nemi 2 y Alma';
     ['nb-pedido','nb-admin','nb-config'].forEach(id=>document.getElementById(id).classList.remove('hidden'));
     curTab='admin'; setNav('admin');
   } else {
@@ -559,7 +559,7 @@ function renderConfig(){
   h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Unidad</div><select id="np-unit" class="cfg-inp cfg-sel"><option>cajón</option><option>paquete</option><option>bolsa</option><option>unidad</option><option>jaula</option><option>caja</option><option>kilo</option></select></div>';
   h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 1</div><input type="number" min="1" value="5" id="np-i0" class="cfg-inp"/></div>';
   h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 2</div><input type="number" min="1" value="5" id="np-i1" class="cfg-inp"/></div>';
-  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Nemi 3</div><input type="number" min="1" value="5" id="np-i2" class="cfg-inp"/></div>';
+  h+='<div><div style="font-size:12px;color:#98a2b3;margin-bottom:5px">Ideal Alma</div><input type="number" min="1" value="5" id="np-i2" class="cfg-inp"/></div>';
   h+='</div>';
   h+=`<button class="btn-action btn-green btn-sm" onclick="addProduct()">➕ Agregar</button></div>`;
 
